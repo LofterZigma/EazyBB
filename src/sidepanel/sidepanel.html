@@ -1,0 +1,734 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EazyBB · 学习概览</title>
+  <link rel="stylesheet" href="sidepanel.css" />
+</head>
+<body>
+  <main class="dashboard">
+    <div id="home-view" class="view">
+    <header class="page-header">
+      <div class="brand">
+        <img class="brand-mark" src="../../assets/logo.png" alt="" />
+        <div>
+          <h1>今天<span id="overview-status-dot" class="overview-status-dot" role="status" aria-live="polite" hidden></span></h1>
+        </div>
+      </div>
+      <button id="open-settings" class="settings-button" type="button" aria-label="打开设置" title="设置">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 15.25a3.25 3.25 0 1 0 0-6.5 3.25 3.25 0 0 0 0 6.5Z" />
+          <path d="M10 2h4l.5 2.1 1.7.7 1.9-1.1 2.8 2.8-1.1 1.9.7 1.7L22 10v4l-2.1.5-.7 1.7 1.1 1.9-2.8 2.8-1.9-1.1-1.7.7L14 22h-4l-.5-2.1-1.7-.7-1.9 1.1-2.8-2.8 1.1-1.9-.7-1.7L2 14v-4l2.1-.5.7-1.7-1.1-1.9 2.8-2.8 1.9 1.1 1.7-.7L10 2Z" />
+        </svg>
+      </button>
+    </header>
+
+    <p id="overview-status" class="overview-status" role="status" aria-live="polite">正在读取 Blackboard…</p>
+
+    <div id="home-layout" class="home-layout">
+    <section class="navigation-card" data-unit="navigation" aria-labelledby="navigation-title">
+      <div class="section-heading"><h2 id="navigation-title">导航</h2></div>
+      <div id="navigation-content" class="navigation-content"></div>
+      <div id="navigation-files" class="navigation-files"></div>
+    </section>
+
+    <section class="calendar-card bento-card" data-unit="calendar" aria-labelledby="calendar-title">
+      <div class="section-heading">
+        <div>
+          <h2 id="calendar-title">日历</h2>
+        </div>
+      </div>
+
+      <div class="calendar-toolbar">
+        <div>
+          <strong id="month-label"></strong>
+          <span id="today-label" class="subtle"></span>
+        </div>
+        <div class="month-controls" aria-label="切换月份">
+          <button id="previous-month" class="icon-button" type="button" aria-label="上个月"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg></button>
+          <button id="next-month" class="icon-button" type="button" aria-label="下个月"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6" /></svg></button>
+        </div>
+      </div>
+
+      <div class="weekday-row" aria-hidden="true">
+        <span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span>
+      </div>
+      <div id="calendar-grid" class="calendar-grid" aria-label="月历"></div>
+
+      <div class="selected-day">
+        <div class="selected-day-date">
+          <span id="selected-day-number" class="selected-number"></span>
+          <span id="selected-day-weekday" class="selected-weekday"></span>
+        </div>
+        <div class="selected-day-copy">
+          <strong id="selected-day-title"></strong>
+          <div id="selected-day-detail" class="selected-day-assignments"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="timetable-section bento-card" data-unit="timetable" aria-labelledby="timetable-title">
+      <div class="section-heading">
+        <div>
+          <h2 id="timetable-title">课程表</h2>
+        </div>
+        <div class="timetable-actions">
+          <button id="refresh-timetable" class="timetable-action-button" type="button" aria-label="刷新课程表" title="刷新课程表">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20 11a8 8 0 1 0-2.4 6.1" />
+              <path d="M20 4v7h-7" />
+            </svg>
+          </button>
+          <button id="export-timetable" class="timetable-action-button" type="button" aria-label="导出课程表 ICS 文件" title="导出 ICS" disabled>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 3v11m0 0 4-4m-4 4-4-4" />
+              <path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <p id="timetable-status" class="timetable-status" role="status" aria-live="polite">点击刷新按钮加载 TIS 课程表</p>
+      <div class="timetable-week-nav" aria-label="切换课程表周数">
+        <button id="previous-timetable-week" class="timetable-nav-button" type="button" aria-label="上一周" title="上一周" disabled>
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 18-6-6 6-6" /></svg>
+        </button>
+        <div class="timetable-week-copy"><strong id="timetable-week">本周</strong><small id="timetable-range">课程日期</small></div>
+        <button id="next-timetable-week" class="timetable-nav-button" type="button" aria-label="下一周" title="下一周" disabled>
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10 6 6 6-6 6" /></svg>
+        </button>
+        <button id="current-timetable-week" class="timetable-today-button" type="button" aria-label="返回本周" title="返回本周" disabled>本周</button>
+      </div>
+      <div id="timetable-days" class="timetable-days" aria-label="选择星期"></div>
+      <div id="timetable-list" class="timetable-list"></div>
+    </section>
+
+    <section class="exams-section bento-card" data-unit="exams" aria-labelledby="exams-title">
+      <div class="section-heading">
+        <div>
+          <h2 id="exams-title">考试 <span id="exams-count" class="count-badge"></span></h2>
+        </div>
+        <div class="exams-actions">
+          <button id="refresh-exams" class="exams-action-button" type="button" aria-label="刷新考试" title="刷新考试">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20 11a8 8 0 1 0-2.4 6.1" />
+              <path d="M20 4v7h-7" />
+            </svg>
+          </button>
+          <button id="add-exam" class="exams-action-button" type="button" aria-label="添加考试" title="添加考试">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <p id="exams-status" class="exams-status" role="status" aria-live="polite">点击刷新按钮加载考试时间表</p>
+      <div id="exams-list" class="exams-list"></div>
+    </section>
+
+    <section class="homework-section" data-unit="homework" aria-labelledby="homework-title">
+      <div class="homework-heading">
+        <div>
+          <h2 id="homework-title">作业 <span id="remaining-count" class="count-badge"></span></h2>
+        </div>
+        <div class="homework-actions">
+          <button id="refresh-overview" class="homework-icon-button" type="button" aria-label="刷新作业" title="刷新作业">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.4 6.1"/><path d="M20 4v7h-7"/></svg>
+          </button>
+          <button id="view-all-assignments" class="homework-icon-button" type="button" aria-label="查看全部作业" title="查看全部作业">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13"/><path d="m3 6 .5.5L5 5m-2 7 .5.5L5 11m-2 7 .5.5L5 17"/></svg>
+          </button>
+        </div>
+      </div>
+      <div id="assignment-list" class="assignment-list"></div>
+    </section>
+    <section class="courses-section" data-unit="courses" aria-labelledby="courses-title">
+      <div class="section-heading">
+        <div>
+          <h2 id="courses-title">本学期课程 <span id="courses-count" class="count-badge"></span></h2>
+        </div>
+      </div>
+      <div id="course-list" class="course-list"></div>
+    </section>
+    </div>
+
+    <p class="footer-note">—— 没有啦 ——</p>
+    </div>
+
+    <div id="course-association-view" class="view" hidden>
+      <header class="page-header subpage-header">
+        <div class="brand">
+          <button id="back-course-association" class="back-button" type="button" aria-label="返回课程表" title="返回课程表">
+            <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+          </button>
+          <div><h1>关联课程</h1></div>
+        </div>
+      </header>
+      <section class="course-association-source bento-card" aria-labelledby="course-association-name">
+        <span>课程表中的课程</span>
+        <h2 id="course-association-name"></h2>
+        <p>选择对应的 Blackboard 课程</p>
+      </section>
+      <div id="course-association-list" class="course-list"></div>
+      <p id="course-association-status" class="course-detail-status" role="status" aria-live="polite"></p>
+    </div>
+
+    <div id="all-assignments-view" class="view" hidden>
+      <header class="page-header subpage-header">
+        <div class="brand">
+          <button id="back-all-assignments" class="back-button" type="button" aria-label="返回主页" title="返回"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg></button>
+          <div><h1>全部作业</h1></div>
+        </div>
+      </header>
+      <p id="all-assignments-summary" class="layout-instructions"></p>
+      <div id="all-assignments-list" class="assignment-list"></div>
+    </div>
+
+    <div id="assignment-view" class="view" hidden>
+      <header class="page-header subpage-header">
+        <div class="brand">
+          <button id="back-assignment" class="back-button" type="button" aria-label="返回主页" title="返回">
+            <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+          </button>
+          <div><h1>作业内容</h1></div>
+        </div>
+      </header>
+
+      <section class="assignment-detail-card bento-card" aria-labelledby="detail-title">
+        <p id="detail-course" class="section-kicker"></p>
+        <h2 id="detail-title"></h2>
+        <p id="detail-due" class="detail-due"></p>
+        <p id="detail-completion" class="detail-completion"></p>
+        <div class="detail-divider"></div>
+        <h3>作业描述</h3>
+        <p id="detail-description" class="detail-description">正在读取…</p>
+        <h3>作业附件</h3>
+        <div id="detail-attachments" class="detail-attachments"></div>
+        <p id="detail-status" class="detail-status" role="status" aria-live="polite"></p>
+      </section>
+
+      <section class="submission-card bento-card" aria-labelledby="submission-title">
+        <h2 id="submission-title">作业提交</h2>
+        <p class="submission-note">暂不支持在这里提交，请到 Blackboard 提交。</p>
+        <label for="submission-text">文本</label>
+        <textarea id="submission-text" rows="4" placeholder="在此输入提交内容"></textarea>
+        <span class="submission-label">附件</span>
+        <label id="upload-zone" class="upload-zone" for="submission-files" tabindex="0">
+          <span class="upload-symbol" aria-hidden="true">＋</span>
+          <strong>点击选择文件，或拖动文件到这里</strong>
+        </label>
+        <input id="submission-files" class="visually-hidden" type="file" multiple aria-label="选择作业附件" />
+        <ul id="selected-files" class="selected-files" aria-live="polite"></ul>
+        <label for="submission-comments">评论</label>
+        <textarea id="submission-comments" rows="3" placeholder="添加评论（可选）"></textarea>
+        <button class="submission-disabled" type="button" disabled>暂不可用</button>
+      </section>
+    </div>
+
+    <div id="course-view" class="view" hidden>
+      <header class="page-header subpage-header">
+        <div class="brand">
+          <button id="back-course" class="back-button" type="button" aria-label="返回主页" title="返回">
+            <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+          </button>
+          <div><h1>课程详情</h1></div>
+        </div>
+        <div class="course-header-actions">
+        <button id="edit-course-tree" class="settings-button course-tree-settings" type="button" aria-label="设置课程页面" title="设置课程页面">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 15.25a3.25 3.25 0 1 0 0-6.5 3.25 3.25 0 0 0 0 6.5Z" />
+            <path d="M10 2h4l.5 2.1 1.7.7 1.9-1.1 2.8 2.8-1.1 1.9.7 1.7L22 10v4l-2.1.5-.7 1.7 1.1 1.9-2.8 2.8-1.9-1.1-1.7.7L14 22h-4l-.5-2.1-1.7-.7-1.9 1.1-2.8-2.8 1.1-1.9-.7-1.7L2 14v-4l2.1-.5.7-1.7-1.1-1.9 2.8-2.8 1.9 1.1 1.7-.7L10 2Z" />
+          </svg>
+        </button>
+        </div>
+      </header>
+
+      <section class="course-detail-hero bento-card" aria-labelledby="course-detail-name">
+        <h2 id="course-detail-name"></h2>
+      </section>
+
+      <div id="course-sections">
+      <section class="course-detail-section" data-course-section="announcements" aria-labelledby="course-announcements-title">
+        <div class="section-heading">
+          <div><h2 id="course-announcements-title"><span class="course-section-name">公告</span> <span id="course-announcements-count" class="count-badge"></span></h2></div>
+        </div>
+        <p id="course-announcements-status" class="course-detail-status" role="status" aria-live="polite"></p>
+        <div id="course-announcements-list" class="course-detail-list"></div>
+      </section>
+
+      <section class="course-detail-section" data-course-section="tree" aria-labelledby="course-materials-title">
+        <div class="section-heading">
+          <div><h2 id="course-materials-title"><span class="course-section-name">内容树</span> <span id="course-materials-count" class="count-badge"></span></h2></div>
+        </div>
+        <p id="course-materials-status" class="course-detail-status" role="status" aria-live="polite"></p>
+        <div id="course-materials-list" class="course-detail-list"></div>
+      </section>
+
+      <section class="course-detail-section" data-course-section="assignments" aria-labelledby="course-assignments-title">
+        <div class="section-heading">
+          <div><h2 id="course-assignments-title"><span class="course-section-name">作业</span> <span id="course-assignments-count" class="count-badge"></span></h2></div>
+        </div>
+        <div id="course-assignments-list" class="assignment-list"></div>
+      </section>
+      </div>
+    </div>
+
+    <div id="course-settings-view" class="view" hidden>
+      <header class="page-header subpage-header">
+        <div class="brand">
+          <button id="back-course-settings" class="back-button" type="button" aria-label="返回课程详情" title="返回课程详情"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg></button>
+          <div><h1>课程设置</h1></div>
+        </div>
+      </header>
+      <p id="course-settings-name" class="layout-instructions"></p>
+      <button id="open-course-layout" class="course-setting-row bento-card" type="button"><span><strong>显示内容排序</strong><small>拖动调整课程页面卡片的顺序与显示</small></span><span aria-hidden="true">›</span></button>
+      <button id="open-course-timetable-link" class="course-setting-row bento-card" type="button"><span><strong>与课程表的关联</strong><small id="course-timetable-link-summary">选择课程表中的课程</small></span><span aria-hidden="true">›</span></button>
+      <button id="open-course-recommendations" class="course-setting-row bento-card" type="button"><span><strong>上课时推荐的卡片</strong><small>分别设置每节课在导航中显示的内容</small></span><span aria-hidden="true">›</span></button>
+      <p id="course-settings-feedback" class="preference-feedback" role="status"></p>
+    </div>
+
+    <div id="course-recommendations-view" class="view" hidden>
+      <header class="page-header subpage-header">
+        <div class="brand">
+          <button id="back-course-recommendations" class="back-button" type="button" aria-label="返回课程设置" title="返回课程设置"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg></button>
+          <div><h1>上课时推荐</h1></div>
+        </div>
+      </header>
+      <section class="course-recommendation-settings bento-card">
+        <h2>上课时推荐的卡片</h2>
+        <p>为每节课选择上课时在导航里显示的内容，最多 2 项。</p>
+        <div id="course-recommendation-options"></div>
+      </section>
+      <p id="course-recommendations-feedback" class="preference-feedback" role="status"></p>
+    </div>
+
+    <div id="course-timetable-link-view" class="view" hidden>
+      <header class="page-header subpage-header">
+        <div class="brand">
+          <button id="back-course-timetable-link" class="back-button" type="button" aria-label="返回课程设置" title="返回课程设置"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg></button>
+          <div><h1>关联课程表</h1></div>
+        </div>
+      </header>
+      <p class="layout-instructions">可关联多门课程表课程，每门课分别设置上课时显示的内容。</p>
+      <div id="course-timetable-link-list" class="course-list"></div>
+      <p id="course-timetable-link-feedback" class="preference-feedback" role="status"></p>
+    </div>
+
+    <div id="course-layout-view" class="view" hidden>
+      <header class="page-header subpage-header">
+        <div class="brand">
+          <button id="back-course-layout" class="back-button" type="button" aria-label="返回课程设置" title="返回课程设置"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg></button>
+          <div><h1>显示内容排序</h1></div>
+        </div>
+        <button id="add-course-layout-item" class="settings-button" type="button" aria-label="添加自定义内容" title="添加自定义内容"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg></button>
+      </header>
+      <p class="layout-instructions">拖动卡片排序，点右侧图标设置，双击自定义卡片名称可重命名。</p>
+      <div id="course-layout-list" class="layout-list"></div>
+      <p id="course-layout-feedback" class="preference-feedback" role="status"></p>
+    </div>
+
+    <div id="course-item-view" class="view" hidden>
+      <header class="page-header subpage-header">
+        <div class="brand">
+          <button id="back-course-item" class="back-button" type="button" aria-label="返回显示内容排序" title="返回显示内容排序"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg></button>
+          <div><h1 id="course-item-title">内容设置</h1></div>
+        </div>
+      </header>
+      <div id="course-item-settings"></div>
+    </div>
+
+    <div id="settings-view" class="view" hidden>
+      <header class="page-header settings-header">
+        <div class="brand">
+          <button id="back-home" class="back-button" type="button" aria-label="返回主页" title="返回">
+            <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="m15 18-6-6 6-6" />
+            </svg>
+          </button>
+          <div>
+            <h1>设置</h1>
+          </div>
+        </div>
+        <img class="brand-mark settings-brand" src="../../assets/logo.png" alt="" />
+      </header>
+
+      <section class="settings-intro bento-card" aria-labelledby="settings-intro-title">
+        <span class="settings-hero-icon" aria-hidden="true">✳</span>
+        <h2 id="settings-intro-title">一切，从这里开始。</h2>
+        <p>日历和作业读取 Blackboard 中的课程作业截止日期。</p>
+      </section>
+
+      <section class="settings-group" aria-labelledby="general-title">
+        <div class="settings-section-heading">
+          <h2 id="general-title">通用</h2>
+        </div>
+        <div class="settings-card bento-card settings-menu">
+          <button class="settings-menu-item" type="button" data-open-view="refresh-view">
+            <span class="menu-symbol" aria-hidden="true"></span>
+            <span class="menu-copy"><strong>数据刷新设置</strong><small id="refresh-summary">5 分钟 · 卡片</small></span>
+            <span class="menu-chevron" aria-hidden="true">›</span>
+          </button>
+          <button class="settings-menu-item" type="button" data-open-view="appearance-view">
+            <span class="menu-symbol" aria-hidden="true"></span>
+            <span class="menu-copy"><strong>外观</strong><small id="appearance-summary">白天</small></span>
+            <span class="menu-chevron" aria-hidden="true">›</span>
+          </button>
+          <button class="settings-menu-item" type="button" data-open-view="animation-view">
+            <span class="menu-symbol" aria-hidden="true"></span>
+            <span class="menu-copy"><strong>动画</strong><small id="animation-summary">开启 · 1×</small></span>
+            <span class="menu-chevron" aria-hidden="true">›</span>
+          </button>
+          <button class="settings-menu-item" type="button" data-open-view="layout-view">
+            <span class="menu-symbol" aria-hidden="true"></span>
+            <span class="menu-copy"><strong>布局</strong><small id="layout-summary">日历 · 课程表 · 作业 · 课程</small></span>
+            <span class="menu-chevron" aria-hidden="true">›</span>
+          </button>
+          <button class="settings-menu-item" type="button" data-open-view="homework-settings-view">
+            <span class="menu-symbol" aria-hidden="true"></span>
+            <span class="menu-copy"><strong>作业</strong><small>数量、顺序和时间范围</small></span>
+            <span class="menu-chevron" aria-hidden="true">›</span>
+          </button>
+          <button class="settings-menu-item" type="button" data-open-view="timetable-settings-view">
+            <span class="menu-symbol" aria-hidden="true"></span>
+            <span class="menu-copy"><strong>课程表</strong><small id="timetable-settings-summary">课程、时间与导入</small></span>
+            <span class="menu-chevron" aria-hidden="true">›</span>
+          </button>
+          <button class="settings-menu-item" type="button" data-open-view="exams-settings-view">
+            <span class="menu-symbol" aria-hidden="true"></span>
+            <span class="menu-copy"><strong>考试</strong><small id="exams-settings-summary">30 天</small></span>
+            <span class="menu-chevron" aria-hidden="true">›</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="settings-group" aria-labelledby="account-title">
+        <div class="settings-section-heading">
+          <h2 id="account-title">校园账号</h2>
+        </div>
+        <div class="settings-card bento-card">
+          <div class="settings-row">
+            <span class="settings-row-icon" aria-hidden="true">↗</span>
+            <div>
+              <strong>登录校园系统</strong>
+              <p>填写校园统一身份认证的学号和密码。</p>
+            </div>
+          </div>
+          <form id="credentials-form" class="credentials-form">
+            <label for="student-id">学号</label>
+            <input id="student-id" name="student-id" type="text" inputmode="numeric" autocomplete="username" placeholder="请输入学号" required />
+            <label for="student-password">密码</label>
+            <input id="student-password" name="student-password" type="password" autocomplete="current-password" placeholder="请输入密码" required />
+            <div class="credentials-actions">
+              <button id="test-credentials" class="form-button test-button" type="submit">测试</button>
+              <button id="save-credentials" class="form-button save-button" type="button">保存</button>
+            </div>
+            <p id="credentials-status" class="credentials-status" role="status" aria-live="polite"></p>
+            <p class="storage-note">保存后，密码会留在此浏览器的扩展存储中，未加密。</p>
+          </form>
+        </div>
+      </section>
+
+      <section class="settings-group" aria-labelledby="about-title">
+        <div class="settings-section-heading">
+          <h2 id="about-title">关于</h2>
+        </div>
+        <div class="settings-card bento-card about-card">
+          <span>EazyBB</span>
+          <span id="extension-version"></span>
+        </div>
+      </section>
+
+      <p class="footer-note">EazyBB · 数据来自 Blackboard</p>
+    </div>
+
+    <div id="refresh-view" class="view" hidden>
+      <header class="page-header subpage-header">
+        <div class="brand">
+          <button class="back-button back-settings" type="button" aria-label="返回设置" title="返回">
+            <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+          </button>
+          <div><h1>数据刷新设置</h1></div>
+        </div>
+      </header>
+      <section class="preference-card bento-card" aria-labelledby="refresh-title">
+        <h2 id="refresh-title">自动读取间隔</h2>
+        <p class="preference-description">侧边栏打开时，按设定间隔自动读取 Blackboard；课程表通过卡片上的按钮手动刷新。</p>
+        <strong id="refresh-value" class="refresh-value">5 分钟</strong>
+        <div class="refresh-slider-shell">
+          <div id="refresh-scale" class="refresh-scale" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+          </div>
+          <input id="refresh-slider" class="refresh-slider" type="range" min="0" max="8" step="1" value="2" aria-label="自动读取间隔" />
+        </div>
+        <p id="refresh-feedback" class="preference-feedback" role="status"></p>
+        <button id="refresh-result-toggle" class="refresh-result-option" type="button" role="switch" aria-checked="true">
+          <span class="refresh-result-copy"><strong>卡片显示刷新结果</strong><small>关闭后在主页标题旁显示状态点</small></span>
+          <span class="refresh-result-switch" aria-hidden="true"></span>
+        </button>
+      </section>
+    </div>
+
+    <div id="appearance-view" class="view" hidden>
+      <header class="page-header subpage-header">
+        <div class="brand">
+          <button class="back-button back-settings" type="button" aria-label="返回设置" title="返回">
+            <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+          </button>
+          <div><h1>外观</h1></div>
+        </div>
+      </header>
+      <section class="preference-card bento-card" aria-labelledby="appearance-title">
+        <h2 id="appearance-title">选择外观</h2>
+        <p class="preference-description">切换侧边栏的显示颜色。</p>
+        <div class="theme-options">
+          <button class="theme-choice" type="button" data-theme-option="light" aria-pressed="true">
+            <span class="theme-preview theme-preview-light" aria-hidden="true"><i></i><i></i></span>
+            <span>白天</span><span class="theme-check" aria-hidden="true">✓</span>
+          </button>
+          <button class="theme-choice" type="button" data-theme-option="dark" aria-pressed="false">
+            <span class="theme-preview theme-preview-dark" aria-hidden="true"><i></i><i></i></span>
+            <span>夜晚</span><span class="theme-check" aria-hidden="true">✓</span>
+          </button>
+        </div>
+        <p id="appearance-feedback" class="preference-feedback" role="status"></p>
+      </section>
+    </div>
+
+    <div id="animation-view" class="view" hidden>
+      <header class="page-header subpage-header">
+        <div class="brand">
+          <button class="back-button back-settings" type="button" aria-label="返回设置" title="返回设置">
+            <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+          </button>
+          <div><h1>动画</h1></div>
+        </div>
+      </header>
+      <section class="preference-card bento-card" aria-labelledby="animation-title">
+        <h2 id="animation-title">动画设置</h2>
+        <p class="preference-description">控制页面切换与日夜模式过渡。</p>
+        <button id="animation-toggle" class="refresh-result-option animation-toggle" type="button" role="switch" aria-checked="true">
+          <span class="refresh-result-copy"><strong>开启动画</strong><small>关闭后直接切换页面与配色</small></span>
+          <span class="refresh-result-switch" aria-hidden="true"></span>
+        </button>
+        <div id="animation-speed-settings" class="animation-speed-settings">
+          <div class="animation-speed-heading"><label for="animation-speed-slider">动画速度</label><strong id="animation-speed-value">1×</strong></div>
+          <div class="refresh-slider-shell">
+            <div id="animation-speed-scale" class="refresh-scale" aria-hidden="true">
+              <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <input id="animation-speed-slider" class="refresh-slider" type="range" min="0" max="6" step="1" value="2" aria-label="动画速度" />
+          </div>
+          <div class="animation-speed-ends" aria-hidden="true"><span>慢</span><span>快</span></div>
+        </div>
+        <p id="animation-feedback" class="preference-feedback" role="status"></p>
+      </section>
+    </div>
+
+    <div id="homework-settings-view" class="view" hidden>
+      <header class="page-header subpage-header">
+        <div class="brand">
+          <button class="back-button back-settings" type="button" aria-label="返回设置" title="返回设置"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg></button>
+          <div><h1>作业设置</h1></div>
+        </div>
+      </header>
+      <div id="homework-settings-content"></div>
+      <p id="homework-settings-feedback" class="preference-feedback" role="status"></p>
+    </div>
+
+    <div id="exams-settings-view" class="view" hidden>
+      <header class="page-header subpage-header">
+        <div class="brand">
+          <button class="back-button back-settings" type="button" aria-label="返回设置" title="返回设置"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg></button>
+          <div><h1>考试设置</h1></div>
+        </div>
+      </header>
+      <section class="preference-card bento-card" aria-labelledby="exams-range-title">
+        <h2 id="exams-range-title">显示范围</h2>
+        <p class="preference-description">侧边栏考试卡片中显示未来多少天内的考试。</p>
+        <strong id="exams-range-value" class="exams-range-value">30 天</strong>
+        <div class="exams-slider-shell">
+          <div id="exams-scale" class="exams-scale" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span>
+          </div>
+          <input id="exams-range-slider" class="exams-slider" type="range" min="0" max="6" step="1" value="3" aria-label="考试显示范围（天数）" />
+        </div>
+        <p id="exams-settings-feedback" class="preference-feedback" role="status"></p>
+      </section>
+    </div>
+
+    <div id="timetable-settings-view" class="view" hidden>
+      <header class="page-header subpage-header">
+        <div class="brand">
+          <button class="back-button back-settings" type="button" aria-label="返回设置" title="返回设置"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg></button>
+          <div><h1>课程表设置</h1></div>
+        </div>
+      </header>
+      <section class="timetable-settings-card bento-card">
+        <div class="timetable-settings-heading"><div><h2>课程表</h2><p id="timetable-settings-source">尚未加载</p></div></div>
+        <div class="timetable-settings-actions">
+          <button id="settings-fetch-timetable" class="form-button" type="button">从 TIS 获取</button>
+          <button id="settings-import-timetable" class="form-button" type="button">导入 ICS</button>
+          <input id="settings-import-timetable-file" type="file" accept=".ics,text/calendar" hidden />
+          <button id="settings-delete-timetable" class="form-button timetable-danger" type="button">删除课程表</button>
+        </div>
+        <p class="timetable-settings-note">从 TIS 获取或导入 ICS 会替换当前课程表，本地修改也会被覆盖。</p>
+        <p id="timetable-settings-feedback" class="preference-feedback" role="status"></p>
+      </section>
+      <section class="timetable-settings-card bento-card">
+        <div class="timetable-settings-heading"><div><h2>课程</h2><p>编辑、添加或删除课程</p></div><button id="settings-add-lesson" class="timetable-add-button" type="button" aria-label="添加课程" title="添加课程"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg></button></div>
+        <div id="timetable-settings-lessons" class="timetable-settings-lessons"></div>
+        <form id="timetable-lesson-form" class="timetable-lesson-form" hidden>
+          <h3 id="timetable-lesson-form-title">添加课程</h3>
+          <label>课程名称<input name="name" required maxlength="120" /></label>
+          <div class="timetable-form-grid"><label>星期<select name="day"><option value="1">周一</option><option value="2">周二</option><option value="3">周三</option><option value="4">周四</option><option value="5">周五</option><option value="6">周六</option><option value="7">周日</option></select></label><label>开始节次<input name="periodStart" type="number" min="1" value="1" required /></label><label>结束节次<input name="periodEnd" type="number" min="1" value="1" required /></label></div>
+          <div class="timetable-form-grid"><label>开始日期<input name="firstDate" type="date" required /></label><label>结束日期<input name="lastDate" type="date" required /></label></div>
+          <div class="timetable-form-grid"><label>开始时间<input name="startTime" type="time" /></label><label>结束时间<input name="endTime" type="time" /></label></div>
+          <label>地点<input name="location" maxlength="120" /></label><label>教师<input name="teacher" maxlength="120" /></label>
+          <div class="timetable-settings-actions"><button class="form-button save-button" type="submit">保存课程</button><button id="settings-cancel-lesson" class="form-button" type="button">取消</button></div>
+        </form>
+      </section>
+      <section class="timetable-settings-card bento-card">
+        <div class="timetable-settings-heading"><div><h2>每节课时间</h2><p>可增删课节，保存后按开始时间自动排序；时间不能重叠。</p></div><button id="settings-add-class-time" class="timetable-add-button" type="button" aria-label="添加课节" title="添加课节"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg></button></div>
+        <div id="timetable-class-times" class="timetable-class-times"></div>
+        <button id="settings-save-class-times" class="form-button save-button" type="button">保存时间</button>
+      </section>
+    </div>
+
+    <div id="layout-view" class="view" hidden>
+      <header class="page-header subpage-header">
+        <div class="brand">
+          <button class="back-button back-settings" type="button" aria-label="返回设置" title="返回">
+            <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+          </button>
+          <div><h1>布局</h1></div>
+        </div>
+      </header>
+      <p id="layout-instructions" class="layout-instructions">拖动卡片调整主页面的上下顺序。</p>
+      <div id="layout-list" class="layout-list" aria-describedby="layout-instructions">
+        <div class="layout-card bento-card" data-unit="navigation" draggable="true" tabindex="0" aria-label="导航卡片，可拖动调整顺序">
+          <span class="drag-handle" aria-hidden="true">⠿</span>
+          <div class="layout-card-content"><strong>导航</strong><div class="mini-homework" aria-hidden="true"><i></i><i></i></div></div>
+        </div>
+        <div class="layout-card bento-card" data-unit="calendar" draggable="true" tabindex="0" aria-label="日历卡片，可拖动调整顺序">
+          <span class="drag-handle" aria-hidden="true">⠿</span>
+          <div class="layout-card-content"><strong>日历</strong><div class="mini-calendar" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+        </div>
+        <div class="layout-card bento-card" data-unit="timetable" draggable="true" tabindex="0" aria-label="课程表卡片，可拖动调整顺序">
+          <span class="drag-handle" aria-hidden="true">⠿</span>
+          <div class="layout-card-content"><strong>课程表</strong><div class="mini-calendar" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+        </div>
+        <div class="layout-card bento-card" data-unit="homework" draggable="true" tabindex="0" aria-label="作业卡片，可拖动调整顺序">
+          <span class="drag-handle" aria-hidden="true">⠿</span>
+          <div class="layout-card-content"><strong>作业</strong><div class="mini-homework" aria-hidden="true"><i></i><i></i></div></div>
+        </div>
+        <div class="layout-card bento-card" data-unit="courses" draggable="true" tabindex="0" aria-label="课程卡片，可拖动调整顺序">
+          <span class="drag-handle" aria-hidden="true">⠿</span>
+          <div class="layout-card-content"><strong>本学期课程</strong><div class="mini-homework" aria-hidden="true"><i></i><i></i></div></div>
+        </div>
+        <div class="layout-card bento-card" data-unit="exams" draggable="true" tabindex="0" aria-label="考试卡片，可拖动调整顺序">
+          <span class="drag-handle" aria-hidden="true">⠿</span>
+          <div class="layout-card-content"><strong>考试</strong><div class="mini-homework" aria-hidden="true"><i></i><i></i></div></div>
+        </div>
+      </div>
+      <p id="layout-feedback" class="preference-feedback" role="status"></p>
+    </div>
+    <div id="add-exam-view" class="view" hidden>
+      <header class="page-header subpage-header">
+        <div class="brand">
+          <button id="close-add-exam" class="back-button" type="button" aria-label="关闭添加考试" title="关闭">
+            <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+          </button>
+          <div><h1>添加考试</h1></div>
+        </div>
+      </header>
+
+      <section class="add-exam-form bento-card" aria-labelledby="add-exam-form-title">
+        <h2 id="add-exam-form-title">手动添加考试信息</h2>
+        <form id="add-exam-form" class="exam-form">
+          <div class="form-group">
+            <label for="exam-course-name">课程名称 <span class="required">*</span></label>
+            <input id="exam-course-name" type="text" placeholder="如：高等数学" required />
+          </div>
+
+          <div class="form-group">
+            <label for="exam-date">考试日期 <span class="required">*</span></label>
+            <input id="exam-date" type="date" required />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="exam-time-start">开始时间</label>
+              <input id="exam-time-start" type="time" placeholder="08:00" />
+            </div>
+            <div class="form-group">
+              <label for="exam-time-end">结束时间</label>
+              <input id="exam-time-end" type="time" placeholder="09:30" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="exam-location">考试地点</label>
+            <input id="exam-location" type="text" placeholder="如：教学楼A 101" />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="exam-start-period">开始节次</label>
+              <select id="exam-start-period">
+                <option value="">未选择</option>
+                <option value="1">第1节</option>
+                <option value="2">第2节</option>
+                <option value="3">第3节</option>
+                <option value="4">第4节</option>
+                <option value="5">第5节</option>
+                <option value="6">第6节</option>
+                <option value="7">第7节</option>
+                <option value="8">第8节</option>
+                <option value="9">第9节</option>
+                <option value="10">第10节</option>
+                <option value="11">第11节</option>
+                <option value="12">第12节</option>
+                <option value="13">第13节</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="exam-end-period">结束节次</label>
+              <select id="exam-end-period">
+                <option value="">未选择</option>
+                <option value="1">第1节</option>
+                <option value="2">第2节</option>
+                <option value="3">第3节</option>
+                <option value="4">第4节</option>
+                <option value="5">第5节</option>
+                <option value="6">第6节</option>
+                <option value="7">第7节</option>
+                <option value="8">第8节</option>
+                <option value="9">第9节</option>
+                <option value="10">第10节</option>
+                <option value="11">第11节</option>
+                <option value="12">第12节</option>
+                <option value="13">第13节</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="exam-notes">备注</label>
+            <textarea id="exam-notes" rows="3" placeholder="其他信息"></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button id="cancel-add-exam" class="form-button cancel-button" type="button">取消</button>
+            <button id="submit-add-exam" class="form-button save-button" type="submit">保存</button>
+          </div>
+
+          <p id="add-exam-feedback" class="form-feedback" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+    </div>
+  </main>
+  <script type="module" src="sidepanel.js"></script>
+</body>
+</html>

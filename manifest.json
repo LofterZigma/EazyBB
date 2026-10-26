@@ -1,0 +1,51 @@
+{
+  "manifest_version": 3,
+  "name": "EazyBB",
+  "version": "0.1.0",
+  "description": "SUSTech 校园服务助手（Blackboard / TIS）",
+  "minimum_chrome_version": "116",
+  "icons": {
+    "16": "assets/icon-16.png",
+    "32": "assets/icon-32.png",
+    "48": "assets/icon-48.png",
+    "128": "assets/icon-128.png"
+  },
+  "permissions": [
+    "storage",
+    "cookies",
+    "activeTab",
+    "sidePanel"
+  ],
+  "host_permissions": [
+    "https://*.sustech.edu.cn/*",
+    "https://cas.sustech.edu.cn/*",
+    "https://bb.sustech.edu.cn/*",
+    "https://tis.sustech.edu.cn/*",
+    "https://jsd.onmicrosoft.cn/*"
+  ],
+  "background": {
+    "service_worker": "src/background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "EazyBB",
+    "default_icon": {
+      "16": "assets/icon-16.png",
+      "32": "assets/icon-32.png"
+    }
+  },
+  "side_panel": {
+    "default_path": "src/sidepanel/sidepanel.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://bb.sustech.edu.cn/*",
+        "https://tis.sustech.edu.cn/*"
+      ],
+      "js": ["src/content/content.js"],
+      "all_frames": true,
+      "run_at": "document_idle"
+    }
+  ]
+}

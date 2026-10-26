@@ -1,0 +1,58 @@
+{
+  "winter_holiday": {
+    "start": "2026-01-12",
+    "end": "2026-02-23"
+  },
+  "spring_semester": {
+    "start": "2026-02-23",
+    "end": "2026-06-30",
+    "sign_in": "2026-02-24",
+    "teaching_start": "2026-02-25",
+    "total_teaching_weeks": 15,
+    "midterm": {
+      "start": "2026-04-13",
+      "end": "2026-04-26",
+      "equivalent_weeks": [8, 9]
+    },
+    "final": {
+      "start": "2026-06-08",
+      "end": "2026-06-18",
+      "equivalent_weeks": [16, 17]
+    },
+    "compensatories": [
+      { "date": "2026-02-28", "week_type": "odd", "workday_type": "Monday" },
+      { "date": "2026-05-09", "week_type": "odd", "workday_type": "Tuesday" }
+    ]
+  },
+  "summer_semester": {
+    "start": "2026-06-29",
+    "end": "2026-08-07"
+  },
+  "summer_holiday": {
+    "start": "2026-06-29",
+    "end": "2026-09-03"
+  },
+  "fall_semester": {
+    "start": "2026-09-01",
+    "end": "2027-01-11",
+    "sign_in": "2026-09-04",
+    "teaching_start": "2026-09-07",
+    "freshman_arrival": "2026-08-17",
+    "total_teaching_weeks": 16,
+    "midterm": {
+      "start": "2026-10-26",
+      "end": "2026-11-08",
+      "equivalent_weeks": [8, 9]
+    },
+    "final": {
+      "start": "2026-12-28",
+      "end": "2027-01-08",
+      "equivalent_weeks": [17]
+    },
+    "compensatories": [
+      { "date": "2026-09-20", "week_type": "odd", "workday_type": "Friday" },
+      { "date": "2026-10-10", "week_type": "odd", "workday_type": "Wednesday" }
+    ],
+    "extra_breaks": ["2026-11-20"]
+  }
+}
