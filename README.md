@@ -31,7 +31,7 @@
 
 ## 安装与使用
 
-在release中下载`EazyBB.crx`，打开你的浏览器"拓展程序"设置，然后直接把程序拖进去。
+在release中下载`EazyBB.zip`，解压后打开你的浏览器"拓展程序"设置，点击"加载未打包的拓展程序"按钮，然后选择解压的文件夹。
 
 首次使用需要在主页右上角的"设置"页面中填上你的学号和密码（记得关闭CAS的手机验证码登录保护），然后去主页手动同步一次课程表。
 
@@ -39,6 +39,8 @@
 
 ## 鸣谢
 
-本项目基于 [sustech_survival](https://github.com/dumixthestpd/sustech_survival) 构建，向vibecoding社同学们的探索精神致敬！
+本项目基于 [sustech_survival](https://github.com/dumixthestpd/sustech_survival) 构建，为vibecoding社同学们的探索精神点赞！
 
-项目依然有很多地方需要打磨，欢迎加入贡献者名单！
+项目依然有很多地方需要打磨，欢迎来提pr，一起为EasyBB贡献！
+
+任何意见反馈：12413313@mail.sustech.edu.cn
