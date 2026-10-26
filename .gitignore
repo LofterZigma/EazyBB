@@ -1,0 +1,26 @@
+# Dependencies and generated output
+node_modules/
+dist/
+build/
+coverage/
+.cache/
+tmp/
+tests/
+
+# Python caches from icon generation
+__pycache__/
+*.py[cod]
+
+# Local settings and logs
+.env
+.env.*
+!.env.example
+*.log
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Chrome extension packages and private signing keys
+*.crx
+*.pem
