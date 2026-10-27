@@ -209,9 +209,9 @@
 
       <section class="submission-card bento-card" aria-labelledby="submission-title">
         <h2 id="submission-title">作业提交</h2>
-        <p class="submission-note">暂不支持在这里提交，请到 Blackboard 提交。</p>
+        <p class="submission-note">提交后可能无法修改，请确认文本与附件。</p>
         <label for="submission-text">文本</label>
-        <textarea id="submission-text" rows="4" placeholder="在此输入提交内容"></textarea>
+        <textarea id="submission-text" rows="4" placeholder="输入作业内容（可选）"></textarea>
         <span class="submission-label">附件</span>
         <label id="upload-zone" class="upload-zone" for="submission-files" tabindex="0">
           <span class="upload-symbol" aria-hidden="true">＋</span>
@@ -220,8 +220,9 @@
         <input id="submission-files" class="visually-hidden" type="file" multiple aria-label="选择作业附件" />
         <ul id="selected-files" class="selected-files" aria-live="polite"></ul>
         <label for="submission-comments">评论</label>
-        <textarea id="submission-comments" rows="3" placeholder="添加评论（可选）"></textarea>
-        <button class="submission-disabled" type="button" disabled>暂不可用</button>
+        <textarea id="submission-comments" rows="3" placeholder="添加给老师的评论（可选）"></textarea>
+        <button id="submit-assignment" class="submission-open-button" type="button">确认提交</button>
+        <p id="submission-status" class="detail-status" role="status" aria-live="polite"></p>
       </section>
     </div>
 

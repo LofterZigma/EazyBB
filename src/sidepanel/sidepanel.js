@@ -20,6 +20,7 @@ import { DEFAULT_CLASS_TIMES, MAX_CLASS_PERIODS, normalizeClassTimes, prepareCla
   makeEditableTimetable, importIcsLessons, lessonsToIcal, remapSourceLessons } from '../core/timetable-editor.js';
 import { courseAssociationKey, resolveBlackboardCourse } from '../core/course-match.js';
 import { openBlackboardFile } from '../core/blackboard-file.js';
+import { submitBlackboardAssignment } from '../core/blackboard-assignment.js';
 
 const chinaFormatter = new Intl.DateTimeFormat('en-US', {
   timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit',
@@ -137,6 +138,9 @@ const views = [homeView, allAssignmentsView, assignmentView, courseView, courseA
 let lastSettingsItem = null;
 let lastAssignmentCard = null;
 let assignmentReturnView = homeView;
+let selectedAssignment = null;
+let assignmentSubmissionPending = false;
+let submissionFiles = [];
 let lastCourseCard = null;
 let lastAssociationLink = null;
 let lastAssociationCard = null;
@@ -1093,6 +1097,7 @@ function renderAttachments(attachments) {
 async function openAssignment(item, card, returnView = homeView) {
   lastAssignmentCard = card;
   assignmentReturnView = returnView;
+  selectedAssignment = item;
   const requestId = ++detailRequestId;
   document.getElementById('detail-course').textContent = item.course;
   document.getElementById('detail-title').textContent = item.title;
@@ -1103,10 +1108,17 @@ async function openAssignment(item, card, returnView = homeView) {
   document.getElementById('detail-description').textContent = '正在读取…';
   document.getElementById('detail-attachments').replaceChildren();
   document.getElementById('detail-status').textContent = '';
+  const submissionButton = document.getElementById('submit-assignment');
+  submissionButton.textContent = '确认提交';
   document.getElementById('submission-text').value = '';
   document.getElementById('submission-comments').value = '';
   document.getElementById('submission-files').value = '';
-  showSelectedFiles([]);
+  submissionFiles = [];
+  renderSelectedSubmissionFiles();
+  submissionButton.disabled = assignmentSubmissionPending || !/^_\d+_\d+$/.test(item.courseId)
+    || !/^_\d+_\d+$/.test(item.contentId);
+  document.getElementById('submission-status').textContent = submissionButton.disabled && !assignmentSubmissionPending
+    ? 'Blackboard 未提供此作业的提交链接' : '';
   showView(assignmentView, document.getElementById('back-assignment'));
   if (!item.courseId || !item.contentId) {
     document.getElementById('detail-description').textContent = '无描述';
@@ -1149,18 +1161,54 @@ async function openAssignment(item, card, returnView = homeView) {
   }
 }
 
-function showSelectedFiles(files) {
+function renderSelectedSubmissionFiles() {
   const list = document.getElementById('selected-files');
   list.replaceChildren();
-  for (const file of files) {
+  for (const [index, entry] of submissionFiles.entries()) {
     const row = document.createElement('li');
-    row.textContent = file.name;
+    const name = document.createElement('span');
+    name.className = 'file-name';
+    name.textContent = entry.file.name;
+    const remove = document.createElement('button');
+    remove.type = 'button';
+    remove.textContent = '×';
+    remove.setAttribute('aria-label', `移除附件：${entry.file.name}`);
+    remove.addEventListener('click', () => {
+      submissionFiles.splice(index, 1);
+      renderSelectedSubmissionFiles();
+    });
+    const note = document.createElement('input');
+    note.type = 'text';
+    note.placeholder = '文件注释（显示在附件名称后，可选）';
+    note.setAttribute('aria-label', `${entry.file.name} 的文件注释`);
+    note.value = entry.note;
+    note.addEventListener('input', () => { entry.note = note.value; });
+    row.append(name, remove, note);
     list.append(row);
   }
 }
 
+function addSubmissionFiles(files) {
+  const status = document.getElementById('submission-status');
+  const incoming = Array.from(files);
+  if (submissionFiles.length + incoming.length > 10) {
+    status.textContent = '一次最多选择 10 个附件';
+    return;
+  }
+  if (incoming.some((file) => file.size === 0)) {
+    status.textContent = '不能添加空文件';
+    return;
+  }
+  submissionFiles.push(...incoming.map((file) => ({ file, note: '' })));
+  status.textContent = '';
+  renderSelectedSubmissionFiles();
+}
+
+document.getElementById('submission-files').addEventListener('change', (event) => {
+  addSubmissionFiles(event.target.files);
+  event.target.value = '';
+});
 const uploadZone = document.getElementById('upload-zone');
-document.getElementById('submission-files').addEventListener('change', (event) => showSelectedFiles(event.target.files));
 uploadZone.addEventListener('keydown', (event) => {
   if (event.key === 'Enter' || event.key === ' ') {
     event.preventDefault();
@@ -1177,7 +1225,48 @@ uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag
 uploadZone.addEventListener('drop', (event) => {
   event.preventDefault();
   uploadZone.classList.remove('drag-over');
-  showSelectedFiles(event.dataTransfer.files);
+  addSubmissionFiles(event.dataTransfer.files);
+});
+
+document.getElementById('submit-assignment').addEventListener('click', async () => {
+  const item = selectedAssignment;
+  const text = document.getElementById('submission-text').value.trim();
+  const comments = document.getElementById('submission-comments').value.trim();
+  const files = submissionFiles.map((entry) => ({ ...entry }));
+  if (!item || assignmentSubmissionPending) return;
+  const requestId = detailRequestId;
+  const button = document.getElementById('submit-assignment');
+  const status = document.getElementById('submission-status');
+  if (!text && !files.length) {
+    status.textContent = '请填写文本或选择至少一个附件';
+    return;
+  }
+  if (!window.confirm(`确认提交至“${item.course} / ${item.title}”？\n文本：${text ? '有' : '无'} · 附件：${files.length} 个\n提交可能计入作业次数。`)) return;
+  assignmentSubmissionPending = true;
+  button.disabled = true;
+  status.textContent = '正在提交，请勿关闭侧栏或重复操作…';
+  try {
+    await submitBlackboardAssignment(item.courseId, item.contentId, { text, comments, files });
+    if (requestId === detailRequestId && selectedAssignment?.id === item.id) {
+      status.textContent = 'Blackboard 已确认提交成功。请在 Blackboard 的提交记录中核对文件和回执。';
+      button.textContent = '已提交';
+      item.bbCompleted = true;
+      item.completed = true;
+      document.getElementById('detail-completion').textContent = '已完成';
+      renderAssignments();
+      renderAllAssignments();
+      renderCalendar();
+    }
+    refreshHomeData();
+  } catch (error) {
+    if (requestId === detailRequestId) status.textContent = `提交未确认：${error.message}`;
+  } finally {
+    assignmentSubmissionPending = false;
+    if (button.textContent !== '已提交') {
+      button.disabled = !selectedAssignment || !/^_\d+_\d+$/.test(selectedAssignment.courseId)
+        || !/^_\d+_\d+$/.test(selectedAssignment.contentId);
+    }
+  }
 });
 
 function courseColor(course) {
